@@ -254,6 +254,11 @@ class ControladorUsuarios{
 		return $respuesta;
 	}
 
+	static public function ctrMostrarSecretarias(){
+		$respuesta = ModeloUsuarios::mdlMostrarUsuariosSecretaria();
+		return $respuesta;
+	}
+
 	/*=============================================
 	MOSTRAR USUARIO MEDICO
 	=============================================*/

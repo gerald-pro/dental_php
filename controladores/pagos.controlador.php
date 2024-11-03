@@ -1,172 +1,134 @@
 <?php
 
-class ControladorPagos{
+require_once 'Mensajes.php';
+
+class ControladorPagos
+{
 
 	/*=============================================
 	MOSTRAR PAGOS
 	=============================================*/
 
-	static public function ctrMostrarPagos($item, $valor){
-
-		$tabla = "razonsocial";
-
-		$respuesta = ModeloPagos::mdlMostrarPagos($tabla, $item, $valor);
-
+	static public function ctrMostrarPagos()
+	{
+		$respuesta = ModeloPagos::mdlMostrarPagos();
 		return $respuesta;
+	}
 
+	public static function ctrMostrarPagoPorId($idPago) {
+		return ModeloPagos::buscarPorId($idPago);
+	}
+
+	static public function ctrObtenerPlanesPorRazonSocial($idRazonSocial)
+	{
+		return ModeloPlanTratamiento::listarPlanesPorRazonSocial($idRazonSocial);
+	}
+
+	static public function ctrObtenerPlanesPorPaciente($idPaciente)
+	{
+		return ModeloPlanTratamiento::listarPorPaciente($idPaciente);
+	}
+
+	static public function obtenerDetallesPlan($planId)
+	{
+		return ModeloPlanTratamiento::obtenerDetallesPlan($planId);
 	}
 
 	/*=============================================
 	RANGO FECHAS
-	=============================================*/	
+	=============================================*/
 
-	static public function ctrRangoFechasPagos($fechaInicial, $fechaFinal){
+	static public function ctrRangoFechasPagos($fechaInicial, $fechaFinal)
+	{
 
 		$tabla = "pago";
 
 		$respuesta = ModeloPagos::mdlRangoFechasPagos($tabla, $fechaInicial, $fechaFinal);
 
 		return $respuesta;
-		
 	}
 
-  static public function ctrEntreFechasPagos($fechaInicial, $fechaFinal){
+	static public function ctrEntreFechasPagos($fechaInicial, $fechaFinal)
+	{
 
 		$tabla = "pago";
 
 		$respuesta = ModeloPagos::mdlEntreFechasPagos($tabla, $fechaInicial, $fechaFinal);
 
 		return $respuesta;
-		
 	}
 
 	/*=============================================
 	SUMA TOTAL PAGOS SERVICIO
 	=============================================*/
 
-	static public function ctrSumaTotalPagos(){
-
+	static public function ctrSumaTotalPagos()
+	{
 		$tabla = "pago";
-
 		$respuesta = ModeloPagos::mdlSumaTotalPagos($tabla);
-
 		return $respuesta;
-
 	}
 
 	/*============================================
 	CREAR PAGO
 	=============================================*/
 
-	static public function ctrCrearPago(){
+	static public function crear()
+	{
+		if (isset($_POST["id_paciente"])) {
+			if (isset($_POST["id_paciente"]) && isset($_POST["id_plan_tratamiento"]) && isset($_POST["id_secretaria"]) && isset($_POST["monto"])) {
 
-		if(isset($_POST["nuevaVenta"])){
+				// Preparar datos para el modelo, usando id_razonsocial solo si está definido
+				$datos = array(
+					"id_paciente" => $_POST["id_paciente"],
+					"id_plan_tratamiento" => $_POST["id_plan_tratamiento"],
+					"id_razonsocial" => !empty($_POST["id_razonsocial"]) ? $_POST["id_razonsocial"] : null,
+					"id_secretaria" => $_POST["id_secretaria"],
+					"monto" => $_POST["monto"],
+					"fecha" => date("Y-m-d H:i:s")
+				);
 
-			$tablaTrabajadores = "usuario";
+				// Llamar al modelo para insertar el pago
+				$respuesta = ModeloPagos::mdlIngresarPagos($datos);
 
-			$item = "id";
-			$valor = $_POST["seleccionarTrabajador"];
+				// Validar la respuesta y mostrar un mensaje de confirmación
+				if ($respuesta == "ok") {
+					$mensaje =  Mensaje::obtenerMensaje(
+						"success",
+						"El pago ha sido registrado correctamente",
+						null,
+						"pagos"
+					);
+				} else {
+					$mensaje = Mensaje::obtenerMensaje(
+						"error",
+						"Error al guardar el pago",
+						$respuesta,
+						"pagos"
+					);
+				}
 
-			$traerCliente = ModeloUsuarios::mdlMostrarUsuarios($tablaTrabajadores, $item, $valor);
+				echo $mensaje;
+			} else {
+				$mensaje = Mensaje::obtenerMensaje(
+					"error",
+					"Entrada incorrecta",
+					"Complete todos los campos obligatorios",
+					"pagos"
+				);
 
-			$tablacliente = "paciente";
-
-			$item = "id";
-			$valor = $_POST["seleccionarCliente"];
-
-			$traeridcliente = ModeloPacientes::mdlMostrarPacientes($tablacliente, $item, $valor);
-
-		
-
-			/*=============================================
-			GUARDAR LA COMPRA
-			=============================================*/
-
-			$tabla = "pago";
-
-			$datos = array("id_secretaria"=>$_POST["idCajera"],
-						"numeroPago"=>$_POST["nuevaVenta"],
-						"idcliente"=>$_POST["seleccionarCliente"],
-						"id_plan_tratamiento"=>$_POST["listaTratamiento"],
-						"monto"=>$_POST["totalPago"],
-						"metodo_pago"=>($_POST["nuevoMetodoPago"] == "Efectivo")? $_POST["nuevoMetodoPago"]: $_POST["listaMetodoPago"]);
-
-			$respuesta = ModeloPagos::mdlIngresarPagos($tabla, $datos);
-
-			if($respuesta == "ok" ){
-
-				echo'<script>
-
-				localStorage.removeItem("rango");
-
-				swal({
-					  type: "success",
-					  title: "El pago ha sido guardado correctamente",
-					  showConfirmButton: true,
-					  confirmButtonText: "Cerrar"
-					  }).then((result) => {
-								if (result.value) {
-
-								window.location = "pago";
-
-								}
-							})
-
-				</script>';
+				echo $mensaje;
 			}
 		}
 	}
 
-		/*=============================================
+	/*=============================================
 		ELIMINAR PAGO
 		=============================================*/
 
-	static public function ctrEliminarPago(){
-
-		if(isset($_GET["idPago"])){
-
-			$tabla = "pago";
-
-			$item = "idpagoservicio";
-			$valor = $_GET["idPago"];
-
-			$traerVenta = ModeloPagos::mdlMostrarPagos($tabla, $item, $valor);
-
-			/*=============================================
-			ELIMINAR PAGO
-			=============================================*/
-
-            //eliminar el detalle de la venta eliminada
-
-            $tablaDetalle = "detallepagoservicio"; 
-            $respuesta = ModeloPagos::mdlEliminarDetallePago($tablaDetalle, $_GET["idPago"]);    
- 
-			$respuesta = ModeloPagos::mdlEliminarPago($tabla, $_GET["idPago"]);
-
-			if($respuesta == "ok"){
-
-
-
-				echo'<script>
-
-				swal({
-					  type: "success",
-					  title: "El pago ha sido borrado correctamente",
-					  showConfirmButton: true,
-					  confirmButtonText: "Cerrar",
-					  closeOnConfirm: false
-					  }).then((result) => {
-								if (result.value) {
-
-								window.location = "pagos";
-
-								}
-							})
-
-				</script>';
-
-			}		
-		}
-
+	static public function ctrEliminarPago($idPago)
+	{
+		$respuesta = ModeloPagos::mdlEliminarPago($idPago);
+		return $respuesta;
 	}
 }

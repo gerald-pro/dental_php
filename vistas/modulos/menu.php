@@ -115,28 +115,10 @@
           </li>
 
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="pagos" class="nav-link">
               <i class="nav-icon 	fas fa-money-bill-wave"></i>
-              <p>
-                Pagos
-                <i class="fas fa-angle-left right"></i>
-              </p>
+              <p>Pagos</p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="pagos" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Administrar Pagos</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="crear-pagos" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Crear Pagos</p>
-                </a>
-              </li>
-
-            </ul>
           </li>
           <li class="nav-item">
             <a href="reportes" class="nav-link">
@@ -146,7 +128,7 @@
               </p>
             </a>
           </li>
-          
+      
         </ul>
 </nav>
       <!-- /.sidebar-menu -->

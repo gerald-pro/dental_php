@@ -165,8 +165,9 @@ INSERT INTO `paciente` (`id`, `nombre`, `apellidoP`, `apellidoM`, `documento`, `
 CREATE TABLE `pago` (
   `id` int(11) NOT NULL,
   `id_plan_tratamiento` int(11) NOT NULL,
-  `id_razonsocial` int(11) NOT NULL,
+  `id_razonsocial` int(11),
   `id_secretaria` int(11) NOT NULL,
+  `id_paciente` int(11) NOT NULL,
   `fecha` datetime NOT NULL,
   `monto` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -185,59 +186,72 @@ CREATE TABLE `plan_tratamiento` (
   `total` decimal(10,0) NOT NULL,
   `estado` tinyint(4) NOT NULL,
   `id_paciente` int(11) NOT NULL,
-  `id_medico` int(11) NOT NULL,
-  `servicios` text COLLATE utf8_spanish_ci NOT NULL
+  `id_medico` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `plan_tratamiento`
 --
 
-INSERT INTO `plan_tratamiento` (`id`, `fecha`, `descuento`, `subtotal`, `total`, `estado`, `id_paciente`, `id_medico`, `servicios`) VALUES
-(1, '0000-00-00 00:00:00', 4, 420, 416, 0, 11, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(2, '0000-00-00 00:00:00', 4, 420, 416, 0, 11, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(3, '0000-00-00 00:00:00', 4, 420, 416, 0, 1, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(4, '0000-00-00 00:00:00', 4, 420, 416, 0, 4, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(5, '0000-00-00 00:00:00', 9, 928, 919, 0, 21, 116, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(6, '0000-00-00 00:00:00', 35, 3500, 3465, 0, 16, 116, '[{\"id\":\"19\",\"nombre\":\"Coronas y Puentes en Porcelana\",\"precio\":\"3500.00\",\"total\":\"3500.00\"}]'),
-(22, '0000-00-00 00:00:00', 4, 420, 416, 0, 14, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(23, '0000-00-00 00:00:00', 4, 420, 416, 0, 13, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(24, '0000-00-00 00:00:00', 25, 2500, 2475, 0, 1, 116, '[{\"id\":\"1\",\"nombre\":\"Ortodoncia\",\"precio\":\"2500.00\",\"total\":\"2500.00\"}]'),
-(25, '0000-00-00 00:00:00', 25, 2500, 2475, 0, 11, 116, '[{\"id\":\"1\",\"nombre\":\"Ortodoncia\",\"precio\":\"2500.00\",\"total\":\"2500.00\"}]'),
-(26, '0000-00-00 00:00:00', 3, 250, 248, 0, 19, 116, '[{\"id\":\"23\",\"nombre\":\"Rayos X\",\"precio\":\"250.00\",\"total\":\"250.00\"}]'),
-(27, '0000-00-00 00:00:00', 3, 250, 248, 0, 13, 116, '[{\"id\":\"25\",\"nombre\":\"limpieza dental\",\"precio\":\"250.00\",\"total\":\"250.00\"}]'),
-(28, '0000-00-00 00:00:00', 25, 2500, 2475, 0, 14, 116, '[{\"id\":\"1\",\"nombre\":\"Ortodoncia\",\"precio\":\"2500.00\",\"total\":\"2500.00\"}]'),
-(29, '0000-00-00 00:00:00', 9, 928, 919, 0, 23, 116, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(30, '0000-00-00 00:00:00', 9, 928, 919, 0, 23, 116, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(31, '0000-00-00 00:00:00', 9, 928, 919, 0, 23, 116, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(32, '0000-00-00 00:00:00', 9, 928, 919, 0, 23, 116, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(33, '0000-00-00 00:00:00', 9, 928, 919, 0, 23, 116, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(34, '0000-00-00 00:00:00', 9, 928, 919, 0, 23, 116, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(35, '0000-00-00 00:00:00', 35, 3500, 3465, 0, 26, 116, '[{\"id\":\"19\",\"nombre\":\"Coronas y Puentes en Porcelana\",\"precio\":\"3500.00\",\"total\":\"3500.00\"}]'),
-(36, '0000-00-00 00:00:00', 35, 3500, 3465, 0, 26, 116, '[{\"id\":\"19\",\"nombre\":\"Coronas y Puentes en Porcelana\",\"precio\":\"3500.00\",\"total\":\"3500.00\"}]'),
-(37, '0000-00-00 00:00:00', 35, 3500, 3465, 0, 26, 116, '[{\"id\":\"19\",\"nombre\":\"Coronas y Puentes en Porcelana\",\"precio\":\"3500.00\",\"total\":\"3500.00\"}]'),
-(38, '0000-00-00 00:00:00', 35, 3500, 3465, 0, 26, 116, '[{\"id\":\"19\",\"nombre\":\"Coronas y Puentes en Porcelana\",\"precio\":\"3500.00\",\"total\":\"3500.00\"}]'),
-(39, '0000-00-00 00:00:00', 35, 3500, 3465, 0, 26, 116, '[{\"id\":\"19\",\"nombre\":\"Coronas y Puentes en Porcelana\",\"precio\":\"3500.00\",\"total\":\"3500.00\"}]'),
-(40, '0000-00-00 00:00:00', 4, 420, 416, 0, 18, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(41, '0000-00-00 00:00:00', 4, 420, 416, 0, 18, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(42, '0000-00-00 00:00:00', 9, 928, 919, 0, 26, 116, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(43, '0000-00-00 00:00:00', 0, 0, 0, 0, 17, 116, ''),
-(44, '0000-00-00 00:00:00', 4, 420, 416, 0, 17, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(45, '0000-00-00 00:00:00', 4, 420, 416, 0, 17, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(46, '0000-00-00 00:00:00', 4, 420, 416, 0, 17, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(47, '0000-00-00 00:00:00', 25, 2500, 2475, 0, 14, 1, '[{\"id\":\"1\",\"nombre\":\"Ortodoncia\",\"precio\":\"2500.00\",\"total\":\"2500.00\"}]'),
-(48, '0000-00-00 00:00:00', 25, 2500, 2475, 0, 14, 1, '[{\"id\":\"1\",\"nombre\":\"Ortodoncia\",\"precio\":\"2500.00\",\"total\":\"2500.00\"}]'),
-(49, '0000-00-00 00:00:00', 4, 420, 416, 0, 1, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracio\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(50, '0000-00-00 00:00:00', 4, 420, 416, 0, 1, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracio\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(51, '0000-00-00 00:00:00', 400, 4000, 3600, 0, 16, 116, '[{\"id\":\"22\",\"nombre\":\"Protesis Parciales\",\"precio\":\"4000.00\",\"total\":\"4000.00\"}]'),
-(52, '0000-00-00 00:00:00', 4, 400, 396, 0, 23, 104, '[{\"id\":\"20\",\"nombre\":\"Tratamiento de Conducto\",\"precio\":\"400.00\",\"total\":\"400.00\"}]'),
-(53, '0000-00-00 00:00:00', 4, 400, 396, 0, 19, 104, '[{\"id\":\"20\",\"nombre\":\"Tratamiento de Conducto\",\"precio\":\"400.00\",\"total\":\"400.00\"}]'),
-(54, '0000-00-00 00:00:00', 9, 928, 919, 0, 22, 104, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(55, '0000-00-00 00:00:00', 9, 928, 919, 0, 22, 104, '[{\"id\":\"18\",\"nombre\":\"Cromo Cobalto\",\"precio\":\"928.00\",\"total\":\"928.00\"}]'),
-(56, '0000-00-00 00:00:00', 4, 400, 396, 0, 22, 104, '[{\"id\":\"20\",\"nombre\":\"Tratamiento de Conducto\",\"precio\":\"400.00\",\"total\":\"400.00\"}]'),
-(57, '0000-00-00 00:00:00', 4, 400, 396, 0, 22, 104, '[{\"id\":\"20\",\"nombre\":\"Tratamiento de Conducto\",\"precio\":\"400.00\",\"total\":\"400.00\"}]'),
-(58, '0000-00-00 00:00:00', 0, 0, 0, 0, 16, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"cantidad\":\"1\",\"stock\":\"NaN\",\"precio\":\"420.00\",\"total\":\"420.00\"}]'),
-(59, '0000-00-00 00:00:00', 0, 0, 0, 0, 22, 116, '[{\"id\":\"15\",\"nombre\":\"Restauracion\",\"cantidad\":\"1\",\"stock\":\"NaN\",\"precio\":\"420.00\",\"total\":\"420.00\"}]');
+
+INSERT INTO `plan_tratamiento` (`id`, `fecha`, `descuento`, `subtotal`, `total`, `estado`, `id_paciente`, `id_medico`) VALUES
+(1, '2023-11-01 10:00:00', 0, 1420, 1420, 0, 11, 116),
+(2, '2023-11-01 11:00:00', 0, 10640, 10640, 0, 11, 116),
+(3, '2023-11-01 12:00:00', 0, 9400, 9400, 0, 1, 116),
+(4, '2023-11-01 13:00:00', 0, 10000, 10000, 0, 4, 116),
+(5, '2023-11-01 14:00:00', 0, 2140, 2140, 0, 21, 116),
+(6, '2023-11-01 15:00:00', 0, 16000, 16000, 0, 16, 116),
+(7, '2023-11-01 16:00:00', 0, 9528, 9528, 0, 14, 116),
+(8, '2023-11-01 17:00:00', 0, 11200, 11200, 0, 13, 116),
+(9, '2023-11-01 18:00:00', 0, 6500, 6500, 0, 1, 116),
+(10, '2023-11-01 19:00:00', 0, 3700, 3700, 0, 11, 116);
+
+
+INSERT INTO `pago` (`id`, `id_plan_tratamiento`, `id_razonsocial`, `id_secretaria`, `id_paciente`, `fecha`, `monto`) VALUES
+(1, 1, NULL, 99, 11, '2023-11-01 10:30:00', 1420),
+(2, 2, NULL, 99, 11, '2023-11-01 11:30:00', 10640),
+(3, 3, NULL, 99, 1, '2023-11-01 12:30:00', 9400),
+(4, 4, NULL, 99, 4, '2023-11-01 13:30:00', 10000),
+(5, 5, NULL, 99, 21, '2023-11-01 14:30:00', 2140),
+(6, 6, NULL, 99, 16, '2023-11-01 15:30:00', 16000),
+(7, 7, NULL, 99, 14, '2023-11-01 16:30:00', 9528),
+(8, 8, NULL, 99, 13, '2023-11-01 17:30:00', 11200),
+(9, 9, NULL, 99, 1, '2023-11-01 18:30:00', 6500),
+(10, 10, NULL, 99, 11, '2023-11-01 19:30:00', 3700);
+
+
+INSERT INTO `detalle_plan_tratamiento` (`id_servicio`, `id_plan_tratamiento`, `precio`, `cantidad`) VALUES
+(15, 1, 420.00, 3), -- Restauracion
+
+(16, 1, 10000.00, 1), -- Protesis Totales
+
+(17, 2, 3000.00, 1), -- Protesis Flexibles
+(18, 2, 928.00, 3), -- Cromo Cobalto
+
+(19, 3, 3500.00, 2), -- Coronas y Puentes en Porcelana
+(20, 3, 400.00, 5), -- Tratamiento de Conducto
+
+(21, 4, 3000.00, 2), -- Cirugia
+(22, 4, 4000.00, 1), -- Protesis Parciales
+
+(23, 5, 250.00, 3), -- Rayos X
+(15, 5, 420.00, 4), -- Restauracion
+
+(16, 6, 10000.00, 1), -- Protesis Totales
+(17, 6, 3000.00, 2), -- Protesis Flexibles
+
+(18, 7, 928.00, 5), -- Cromo Cobalto
+(19, 7, 3500.00, 1), -- Coronas y Puentes en Porcelana
+
+(20, 8, 400.00, 5), -- Tratamiento de Conducto
+(21, 8, 3000.00, 1), -- Cirugia
+
+(22, 9, 4000.00, 1), -- Protesis Parciales
+(23, 9, 250.00, 2), -- Rayos X
+
+(15, 10, 420.00, 3), -- Restauracion
+(20, 10, 400.00, 5);
+
 
 -- --------------------------------------------------------
 
@@ -363,7 +377,8 @@ ALTER TABLE `pago`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_plan_tratamiento` (`id_plan_tratamiento`),
   ADD KEY `id_razonsocial` (`id_razonsocial`),
-  ADD KEY `id_secretaria` (`id_secretaria`);
+  ADD KEY `id_secretaria` (`id_secretaria`),
+  ADD KEY `id_paciente` (`id_paciente`);
 
 --
 -- Indices de la tabla `plan_tratamiento`
@@ -460,8 +475,7 @@ ALTER TABLE `cita`
 --
 ALTER TABLE `detalle_plan_tratamiento`
   ADD CONSTRAINT `detalle_plan_tratamiento_ibfk_1` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id`),
-  ADD CONSTRAINT `detalle_plan_tratamiento_ibfk_2` FOREIGN KEY (`id_plan_tratamiento`) REFERENCES `plan_tratamiento` (`id`);
-
+  ADD CONSTRAINT `detalle_plan_tratamiento_ibfk_2` FOREIGN KEY (`id_plan_tratamiento`) REFERENCES `plan_tratamiento` (`id`) ON DELETE CASCADE;
 --
 -- Filtros para la tabla `horario`
 --
@@ -472,9 +486,10 @@ ALTER TABLE `horario`
 -- Filtros para la tabla `pago`
 --
 ALTER TABLE `pago`
-  ADD CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`id_plan_tratamiento`) REFERENCES `plan_tratamiento` (`id`),
+  ADD CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`id_plan_tratamiento`) REFERENCES `plan_tratamiento` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `pago_ibfk_2` FOREIGN KEY (`id_razonsocial`) REFERENCES `razonsocial` (`id`),
-  ADD CONSTRAINT `pago_ibfk_3` FOREIGN KEY (`id_secretaria`) REFERENCES `usuario` (`id`);
+  ADD CONSTRAINT `pago_ibfk_3` FOREIGN KEY (`id_secretaria`) REFERENCES `usuario` (`id`),
+  ADD CONSTRAINT `pago_ibfk_4` FOREIGN KEY (`id_paciente`) REFERENCES `paciente` (`id`);
 
 --
 -- Filtros para la tabla `plan_tratamiento`

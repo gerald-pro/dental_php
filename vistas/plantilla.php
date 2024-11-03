@@ -189,7 +189,8 @@ session_start();
 <script src="vistas/js/razonsocial.js"></script>
 <script src="vistas/js/horarios.js"></script>
 <script src="vistas/js/citas.js"></script>
-<script src="vistas/js/plantratamiento.js"></script>
+<script src="vistas/js/createPlanTratamiento.js"></script>
+<script src="vistas/js/planTratamiento.js"></script>
 <script src="vistas/js/pagos.js"></script>
 
 </html>

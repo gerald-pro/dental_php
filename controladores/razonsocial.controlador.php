@@ -16,6 +16,12 @@ class ControladorRazonSocial
 		return $respuesta;
 	}
 
+	static public function listar()
+	{
+		$respuesta = ModeloRazonSocial::listar();
+		return $respuesta;
+	}
+
 	/*=============================================
 	CREAR SERVICIOS
 	=============================================*/

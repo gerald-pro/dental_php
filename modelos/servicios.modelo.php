@@ -10,48 +10,62 @@ class ModeloServicios
 
     static public function mdlMostrarServicios($tabla, $item, $valor)
     {
-        if($item != null){
+        if ($item != null) {
 
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item ORDER BY id DESC");
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item ORDER BY id DESC");
 
-			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
+            $stmt->bindParam(":" . $item, $valor, PDO::PARAM_STR);
 
-			$stmt -> execute();
+            $stmt->execute();
 
-			return $stmt -> fetch();
+            return $stmt->fetch();
+        } else {
 
-		}else{
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla ");
 
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla ");
+            $stmt->execute();
 
-			$stmt -> execute();
+            return $stmt->fetchAll();
+        }
 
-			return $stmt -> fetchAll();
+        $stmt->close();
 
-		}
-
-		$stmt -> close();
-
-		$stmt = null;
+        $stmt = null;
     }
-    
+
     /*=============================================
     MOSTRAR PRODUCTOS detalles 
     =============================================*/
-    static public function mdlMostrarServiciosdetalles($tabla, $item, $valor) {
+    static public function mdlMostrarServiciosdetalles($tabla, $item, $valor)
+    {
         if ($item != null) {
-                $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
-                $stmt->bindParam(":" . $item, $valor, PDO::PARAM_STR);
-                $stmt->execute();
-                return $stmt->fetch();
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
+            $stmt->bindParam(":" . $item, $valor, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetch();
         } else {
-                $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
-                $stmt->execute();
-                return $stmt->fetchAll();
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+            $stmt->execute();
+            return $stmt->fetchAll();
         }
 
         $stmt = null;
-}
+    }
+
+    static public function listarServiciosPorPlan($idPlan) {
+        $stmt = Conexion::conectar()->prepare("
+            SELECT s.id, s.nombre, dpt.cantidad, dpt.precio 
+            FROM servicio s
+            INNER JOIN detalle_plan_tratamiento dpt ON s.id = dpt.id_servicio
+            WHERE dpt.id_plan_tratamiento = :idPlan
+        ");
+        $stmt->bindParam(":idPlan", $idPlan, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+        
+        $stmt = null;
+    }
+
     /*=============================================
 	CREAR SERVICIO
 	=============================================*/
@@ -85,24 +99,22 @@ class ModeloServicios
     {
 
         $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET nombre = :nombre, precio = :precio WHERE id = :id");
-       
-		$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
-		$stmt->bindParam(":precio", $datos["precio"], PDO::PARAM_STR);
-		
-		$stmt -> bindParam(":id", $datos["id"], PDO::PARAM_INT);
 
-		if($stmt->execute()){
+        $stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
+        $stmt->bindParam(":precio", $datos["precio"], PDO::PARAM_STR);
 
-			return "ok";
+        $stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
 
-		}else{
+        if ($stmt->execute()) {
 
-			return "error";
-		
-		}
+            return "ok";
+        } else {
 
-		
-		$stmt = null;
+            return "error";
+        }
+
+
+        $stmt = null;
     }
 
     /*=============================================
@@ -130,8 +142,8 @@ class ModeloServicios
         $stmt = null;
     }
 
-    
-        /*=============================================
+
+    /*=============================================
         ELIMINAR SERVICIO
         =============================================*/
 

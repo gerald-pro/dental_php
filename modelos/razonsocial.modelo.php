@@ -13,21 +13,30 @@ class ModeloRazonSocial
 
         if ($item != null) {
             $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
-        $stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
-        $stmt->execute();
-        $resultados = $stmt->fetch();
-        $stmt = null; 
-        return $resultados;
-    } else {
-        $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
-        $stmt->execute();
-        $resultados = $stmt->fetchAll();
-        $stmt = null; 
-        return $resultados;
-    }
+            $stmt->bindParam(":" . $item, $valor, PDO::PARAM_STR);
+            $stmt->execute();
+            $resultados = $stmt->fetch();
+            $stmt = null;
+            return $resultados;
+        } else {
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+            $stmt->execute();
+            $resultados = $stmt->fetchAll();
+            $stmt = null;
+            return $resultados;
+        }
     }
 
-    
+    static public function listar()
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM razonsocial");
+        $stmt->execute();
+        $resultados = $stmt->fetchAll();
+        $stmt = null;
+        return $resultados;
+    }
+
+
     /*=============================================
 	CREAR SERVICIO
 	=============================================*/
@@ -39,7 +48,7 @@ class ModeloRazonSocial
 
         $stmt->bindParam(":nit", $datos["nit"], PDO::PARAM_STR);
         $stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
-        
+
 
         if ($stmt->execute()) {
 
@@ -49,7 +58,7 @@ class ModeloRazonSocial
             return "error";
         }
 
-        
+
         $stmt = null;
     }
 
@@ -62,24 +71,22 @@ class ModeloRazonSocial
     {
 
         $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET nit = :nit, nombre = :nombre  WHERE id = :id");
-       
+
         $stmt->bindParam(":nit", $datos["nit"], PDO::PARAM_STR);
         $stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
-		
-		$stmt -> bindParam(":id", $datos["id"], PDO::PARAM_INT);
 
-		if($stmt->execute()){
+        $stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
 
-			return "ok";
+        if ($stmt->execute()) {
 
-		}else{
+            return "ok";
+        } else {
 
-			return "error";
-		
-		}
+            return "error";
+        }
 
-		
-		$stmt = null;
+
+        $stmt = null;
     }
 
     /*=============================================
@@ -107,7 +114,7 @@ class ModeloRazonSocial
         $stmt = null;
     }
 
-        /*=============================================
+    /*=============================================
         ELIMINAR SERVICIO
         =============================================*/
 

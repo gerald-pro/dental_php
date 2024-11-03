@@ -1,176 +1,136 @@
 <?php
-    //este codigo verifica que si es secretaria le mande al inicio , restringue que la secretaria cree un plan tratamiento//
-    if ($_SESSION["perfil"] == "Secretaria") {
+//este codigo verifica que si es secretaria le mande al inicio , restringue que la secretaria cree un plan tratamiento//
+if ($_SESSION["perfil"] == "Secretaria") {
 
-        echo '<script>
+    echo '<script>
         window.location = "inicio";
     </script>';
 
-        return;
-    }
+    return;
+}
 ?>
 
-<div class="content-wrapper">
+<div class="content-wrapper px-4">
     <section class="content-header">
         <ol class="breadcrumb mb-4">
-            <!-- Aquí se agrega la clase mb-4 -->
             <li class="breadcrumb-item"><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
             <li class="breadcrumb-item active" aria-current="page">Crear Plan Tratamiento</li>
         </ol>
-
-        <h1 class="mt-3">Crear Plan Tratamiento</h1> <!-- Aquí puedes agregar margen superior si es necesario -->
+        <h1 class="mt-3">Crear Plan Tratamiento</h1>
     </section>
 
     <section class="content">
-        <!-- Fondo celeste claro -->
         <div class="row">
-
-            <!-- EL FORMULARIO -->
+            <!-- Formulario para creación de plan de tratamiento -->
             <div class="col-lg-5 col-xs-12">
-                <div class="box box-success" style="background-color: rgba(255, 255, 255, 0.8);">
-                    <!-- Borde negro y fondo transparente -->
-                    <!-- Aplicar estilos aquí -->
-                    <div class="box-header with-border"></div>
+                <div class="card card-success shadow-sm p-3 mb-5 bg-white rounded">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="card-title">Datos del Plan de Tratamiento</h3>
+                    </div>
 
-                    <form role="form" method="post" class="formularioPlantratamiento">
-                        <div class="box-body">
-                            <div class="box">
-
-                                <!-- ENTRADA DEL VENDEDOR -->
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon" style="margin-right: 16px;"><i
-                                                class="fa fa-user"></i></span>
-                                        <input type="text" class="form-control" id="nuevoCajera"
-                                            value="<?php echo $_SESSION['nombre']; ?>" readonly>
-                                        <input type="hidden" name="idCajera" value="<?php echo $_SESSION['id']; ?>">
-                                    </div>
+                    <form role="form" method="post" class="formularioPlantratamiento p-3">
+                        <!-- Campo de vendedor o usuario actual -->
+                        <div class="form-group">
+                            <label>Usuario</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
                                 </div>
-
-                                <!-- ENTRADA DEL PACIENTE -->
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon" style="margin-right: 0.5px;"><i
-                                                class="fa fa-users"></i></span>
-                                        <div class="col-lg-6 col-md-8 col-sm-10">
-                                            <select class="form-control" id="seleccionarCliente"
-                                                name="seleccionarCliente" required>
-                                                <option selected="selected">Seleccionar Paciente</option>
-                                                <?php
-                                                $item = null;
-                                                $valor = null;
-                                                $clientes = ControladorPacientes::ctrMostrarPacientes($item, $valor);
-                                                foreach ($clientes as $key => $value) {
-                                                    echo '<option value="' . $value['id'] . '">' . $value['nombre'] . ' ' . $value['apellidoP'] . ' ' . $value['apellidoM'] . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-
-                                        <!-- Botón "Agregar Paciente" centrado -->
-                                        <span class="input-group-addon" style="display: flex; align-items: center;">
-                                            <button type="button" class="btn btn-default btn-xs mx-auto"
-                                                data-toggle="modal" data-target="#modalAgregarPaciente"
-                                                data-dismiss="modal" style="display: block; margin-left: 6px;">Agregar
-                                                Paciente</button>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <!-- ENTRADA PARA AGREGAR PRODUCTO -->
-                                <div class="form-group row nuevoServicio"></div>
-                                <input type="hidden" id="listaServicios" name="listaServicios">
-
-                                <hr>
-
-                                <div class="row">
-                                    <!-- ENTRADA IMPUESTOS Y TOTAL -->
-                                    <div class="col-xs-8 pull-right">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Descuento</th>
-                                                    <th>SubTotal</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td style="width: 30%">
-                                                        <div class="input-group">
-                                                            <input type="number" class="form-control input-lg" min="0"
-                                                                id="nuevoDescuento" name="nuevoDescuento"
-                                                                placeholder="0" required>
-                                                            <input type="hidden" name="nuevoPrecioDescuento"
-                                                                id="nuevoPrecioDescuento" required>
-                                                            <input type="hidden" name="nuevoPrecioNeto"
-                                                                id="nuevoPrecioNeto" required>
-                                                            <span class="input-group-addon padding-right-icon"><i
-                                                                    class="fa fa-percent"></i></span>
-                                                        </div>
-                                                    </td>
-                                                    <td style="width: 30%">
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon"><b>Bs.</b></span>
-                                                            <input type="text" class="form-control input-lg"
-                                                                id="nuevosubTotalPlantratamiento"
-                                                                name="nuevosubTotalPlantratamiento" subtotal=""
-                                                                placeholder="00000" readonly required>
-                                                            <input type="hidden" name="subtotalPlantratamiento"
-                                                                id="subtotalPlantratamiento">
-                                                        </div>
-                                                    </td>
-                                                    <td style="width: 30%">
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon"><b>Bs.</b></span>
-                                                            <input type="text" class="form-control input-lg"
-                                                                id="nuevoTotalPlantratamiento"
-                                                                name="nuevoTotalPlantratamiento" total=""
-                                                                placeholder="00000" readonly required>
-                                                            <input type="hidden" name="totalPlantratamiento"
-                                                                id="totalPlantratamiento">
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <hr>
-                                <br>
+                                <input type="text" class="form-control" id="nuevoCajera" value="<?php echo $_SESSION['nombre']; ?>" readonly>
+                                <input type="hidden" name="idCajera" value="<?php echo $_SESSION['id']; ?>">
                             </div>
                         </div>
 
-                        <style>
-                            .padding-boton {
-                                padding: 20px 0;
-                                /* Ajusta el valor según lo necesites */
-                            }
-                        </style>
-
-                        <div class="box-footer">
-                            <div class="text-center padding-boton">
-                                <!-- Clase para centrar el botón y aplicar padding -->
-                                <button type="submit" class="btn btn-primary">Guardar Tratamiento</button>
+                        <!-- Campo de selección del paciente -->
+                        <div class="form-group">
+                            <label>Paciente</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-users"></i></span>
+                                </div>
+                                <select class="form-control" id="seleccionarCliente" name="seleccionarCliente" required>
+                                    <option selected="selected">Seleccionar Paciente</option>
+                                    <?php
+                                    $item = null;
+                                    $valor = null;
+                                    $clientes = ControladorPacientes::ctrMostrarPacientes($item, $valor);
+                                    foreach ($clientes as $key => $value) {
+                                        echo '<option value="' . $value['id'] . '">' . $value['nombre'] . ' ' . $value['apellidoP'] . ' ' . $value['apellidoM'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-primary btn-sm ml-2" data-toggle="modal" data-target="#modalAgregarPaciente" data-dismiss="modal">Agregar Paciente</button>
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- Sección para añadir servicios -->
+                        <div class="form-group">
+                            <label>Servicios</label>
+                            <div class="nuevoServicio mb-3">
+                                <!-- Aquí se añadirán los servicios dinámicamente -->
+                            </div>
+                            <input type="hidden" id="listaServicios" name="listaServicios">
+                        </div>
+
+                        <hr class="mt-4">
+
+                        <!-- Sección de descuento, subtotal y total -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label>Descuento</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" min="0" id="nuevoDescuento" name="nuevoDescuento" placeholder="0" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-percent fa-xs "></i></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label>SubTotal</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Bs.</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="nuevosubTotalPlantratamiento" name="nuevosubTotalPlantratamiento" placeholder="0" readonly required>
+                                    <input type="hidden" name="subtotalPlantratamiento" id="subtotalPlantratamiento">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label>Total</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Bs.</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="nuevoTotalPlantratamiento" name="nuevoTotalPlantratamiento" placeholder="0" readonly required>
+                                    <input type="hidden" name="totalPlantratamiento" id="totalPlantratamiento">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Guardar Tratamiento</button>
                         </div>
                     </form>
-
                     <?php
-                    $guardarVenta = new ControladorPlanTratamiento();
-                    $guardarVenta->ctrCrearPlanTratamiento();
+                        $guardarVenta = new ControladorPlanTratamiento();
+                        $guardarVenta->ctrCrearPlanTratamiento();
                     ?>
                 </div>
             </div>
 
-            <!-- LA TABLA DE PRODUCTOS -->
-            <div class="col-lg-7 hidden-md hidden-sm hidden-xs">
-                <div class="box box-warning" style="background-color: rgba(255, 255, 255, 0.8);">
-                    <!-- Borde negro y fondo transparente -->
-                    <div class="box-header with-border"></div>
-                    <div class="box-body">
-                        <table class="table table-bordered table-striped dt-responsive tablaPlantratamiento">
-                            <thead>
+            <!-- Tabla de productos -->
+            <div class="col-lg-7 d-none d-lg-block">
+                <div class="card card-warning shadow-sm p-3 mb-5 bg-white rounded">
+                    <div class="card-header bg-warning text-white">
+                        <h3 class="card-title">Lista de Servicios</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped table-hover dt-responsive tablaPlantratamiento">
+                            <thead class="thead-dark">
                                 <tr>
                                     <th style="width: 10px">#</th>
                                     <th>Nombre</th>
@@ -178,6 +138,9 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                <!-- Aquí irán los datos de los servicios -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -320,8 +283,8 @@ MODAL AGREGAR PACIENTE
                 </div>
 
                 <?php
-                    $crearPaciente = new ControladorPacientes();
-                    $crearPaciente->ctrCrearPacientes();
+                $crearPaciente = new ControladorPacientes();
+                $crearPaciente->ctrCrearPacientes();
                 ?>
             </form>
         </div>

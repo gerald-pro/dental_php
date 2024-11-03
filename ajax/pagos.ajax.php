@@ -1,58 +1,29 @@
 <?php
 
-require_once "../controladores/plantratamiento.controlador.php";
+require_once "../controladores/pagos.controlador.php";
 require_once "../modelos/plantratamiento.modelo.php";
+require_once "../modelos/pagos.modelo.php";
 
-class TablaPagoPlanTratamiento
-{
-    /*=============================================
-        MOSTRAR LA TABLA DE TRATAMIENTO
-        =============================================*/
-    public function mostrarTablaPagoTratamiento()
-    {
-
-        $item = null;
-        $valor = null;
-
-        $servicios = ControladorPlanTratamiento::ctrMostrarPlanTratamiento($item, $valor);
-
-        if (count($servicios) == 0) {
-
-            echo '{"data": []}';
-
-            return;
-        }
-
-        $datosJson = '{
-		    "data": [';
-
-        for ($i = 0; $i < count($servicios); $i++) {
-
-            /*=============================================
-                TRAEMOS LAS ACCIONES
-                ============================================*/
-
-            $botones =  "<div class='btn-group'><button class='btn btn-sm btn-outline-info agregarProducto recuperarBoton' idServicio='" . $servicios[$i]["idservicio"] . "'>Agregar</button></div>";
-
-            $datosJson .= '[
-			    "' . ($i + 1) . '",
-			    "' . $servicios[$i]["nombre"] . '",
-			    "Bs '.number_format($servicios[$i]["precio"],2) . '",
-			    "' . $botones . '"
-			    ],';
-        }
-
-        $datosJson = substr($datosJson, 0, -1);
-
-        $datosJson .=   ']
-
-		}';
-
-        echo $datosJson;
-    }
+if (isset($_POST["idPaciente"])) {
+    $idPaciente = $_POST["idPaciente"];
+    $planes = ControladorPagos::ctrObtenerPlanesPorPaciente($idPaciente);
+    echo json_encode($planes);
 }
-/*=============================================
-ACTIVAR TABLA DE PAGO SERVICIOS
-=============================================*/
-$activarPagoServicios = new TablaPagoPlanTratamiento();
-$activarPagoServicios -> mostrarTablaPagoTratamiento();
+
+if (isset($_POST["id_plan_tratamiento"])) {
+    $planId = $_POST["id_plan_tratamiento"];
+    $respuesta = ControladorPagos::obtenerDetallesPlan($planId);
+    echo json_encode($respuesta);
+}
+
+if (isset($_POST["idPago"])) {
+    $idPago = $_POST["idPago"];
+    $pago = ControladorPagos::ctrMostrarPagoPorId($idPago);
+    echo json_encode($pago);
+}
+
+if (isset($_POST["idPago"]) && isset($_POST["delete"])) {
+    $idPago = $_POST["idPago"];
+    $pago = ControladorPagos::ctrEliminarPago($idPago);
+    echo json_encode($pago);
+}
